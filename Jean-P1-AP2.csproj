@@ -5,4 +5,8 @@
     <RootNamespace>Jean_P1_AP2</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Blazored.Toast" Version="3.1.2" />
+  </ItemGroup>
+
 </Project>
