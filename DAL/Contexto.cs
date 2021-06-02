@@ -12,7 +12,7 @@ namespace RegistroPersonasBlazor.DAL
         {
             base.OnConfiguring(optionsBuilder);
 
-            optionsBuilder.UseSqlite(@"Data Source=Data\.db");
+            optionsBuilder.UseSqlite(@"Data Source=Data\.db"); 
         }
     }
 }
