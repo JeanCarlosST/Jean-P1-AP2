@@ -1,0 +1,128 @@
+﻿@page "/rproductos"
+
+@inject IToastService toast
+
+<EditForm Model="Producto" OnValidSubmit="Guardar">
+    <DataAnnotationsValidator/>
+
+    <div class="row justify-content-center">
+
+        <div class="col-7">
+
+            <div class="card">
+
+                <div class="card-header">
+                    <h3>Registro de productos</h3>
+                </div>
+
+                <div class="card-body">
+
+                    <form>
+
+                        <div class="form-group mb-2">
+                            <label>ProductoID</label>
+                            <div class="input-group">
+                                <InputNumber class="form-control" @bind-Value="Producto.ProductoId" />
+                                <button class="btn btn-warning" type="button" @onclick="Buscar">
+                                    <i class="oi oi-magnifying-glass mr-2" />Buscar
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="form-group mb-2">
+                            <label>Descripción</label>
+                            <InputText class="form-control" @bind-Value="Producto.Descripcion" />
+                            <ValidationMessage For="@(() => Producto.Descripcion)" />
+                        </div>
+
+                        <div class="form-group mb-2">
+                            <label>Existencia</label>
+                            <InputNumber class="form-control" @bind-Value="Producto.Existencia" />
+                            <ValidationMessage For="@(() => Producto.Existencia)" />
+                        </div>
+
+                        <div class="form-group mb-2">
+                            <label>Costo</label>
+                            <InputNumber class="form-control" @bind-Value="Producto.Costo" />
+                            <ValidationMessage For="@(() => Producto.Costo)" />
+                        </div>
+
+                        <div class="form-group mb-2">
+                            <label>Valor inventario</label>
+                            <InputNumber class="form-control" @bind-Value="Producto.ValorInventario" readonly/>
+                            <ValidationMessage For="@(() => Producto.ValorInventario)" />
+                        </div>
+
+                    </form>
+
+                </div>
+
+                <div class="card-footer">
+
+                    <div class="row justify-content-center">
+                        <button class="btn btn-primary col-3" type="button" @onclick="Nuevo">
+                            <i class="oi oi-file mr-2" />Nuevo
+                        </button>
+
+                        <button class="btn btn-success col-3 mx-2">
+                            <i class="oi oi-account-login mr-2" />Guardar
+                        </button>
+
+                        <button class="btn btn-danger col-3" type="button" @onclick="Eliminar">
+                            <i class="oi oi-trash mr-2" />Eliminar
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</EditForm>
+
+@code {
+    public Productos Producto { get; set; } = new Productos();
+
+    public void Buscar()
+    {
+        Productos prodEncontrado = ProductosBLL.Buscar(Producto.ProductoId);
+
+        if (prodEncontrado != null)
+            Producto = prodEncontrado;
+        else
+            toast.ShowWarning("Productos no encontrado");
+    }
+
+    public void Nuevo()
+    {
+        Producto = new Productos();
+    }
+
+    public void Guardar()
+    {
+        bool guardado = ProductosBLL.Guardar(Producto);
+
+        if (guardado)
+        {
+            Nuevo();
+            toast.ShowSuccess("Producto guardado correctamente");
+        }
+        else
+            toast.ShowError("No se puedo guardar el producto");
+    }
+
+    public void Eliminar()
+    {
+        bool eliminado = ProductosBLL.Eliminar(Producto.ProductoId);
+
+        if (eliminado)
+        {
+            Nuevo();
+            toast.ShowSuccess("Producto eliminado correctamente");
+        }
+        else
+            toast.ShowError("No se puedo eliminar el producto");
+    }
+}
