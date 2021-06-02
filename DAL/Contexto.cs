@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace RegistroPersonasBlazor.DAL
+namespace Jean_P1_AP2.DAL
 {
     public class Contexto : DbContext
     {

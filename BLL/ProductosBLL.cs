@@ -1,6 +1,6 @@
-﻿using Jean_P1_AP2.Models;
+﻿using Jean_P1_AP2.DAL;
+using Jean_P1_AP2.Models;
 using Microsoft.EntityFrameworkCore;
-using RegistroPersonasBlazor.DAL;
 using System;
 using System.Collections.Generic;
 using System.Linq;
