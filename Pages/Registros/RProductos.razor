@@ -37,13 +37,13 @@
 
                         <div class="form-group mb-2">
                             <label>Existencia</label>
-                            <InputNumber class="form-control" @bind-Value="Producto.Existencia" />
+                            <InputNumber class="form-control" @bind-Value="Producto.Existencia" @oninput="@ActualizarValorInventario" />
                             <ValidationMessage For="@(() => Producto.Existencia)" />
                         </div>
 
                         <div class="form-group mb-2">
                             <label>Costo</label>
-                            <InputNumber class="form-control" @bind-Value="Producto.Costo" />
+                            <InputNumber class="form-control" @bind-Value="Producto.Costo" @oninput="@ActualizarValorInventario"/>
                             <ValidationMessage For="@(() => Producto.Costo)" />
                         </div>
 
@@ -65,7 +65,7 @@
                         </button>
 
                         <button class="btn btn-success col-3 mx-2">
-                            <i class="oi oi-account-login mr-2" />Guardar
+                            <i class="oi oi-account-login mr-2" style="transform:rotate(90deg)" />Guardar
                         </button>
 
                         <button class="btn btn-danger col-3" type="button" @onclick="Eliminar">
@@ -84,6 +84,11 @@
 
 @code {
     public Productos Producto { get; set; } = new Productos();
+
+    public void ActualizarValorInventario(ChangeEventArgs e)
+    {
+        Producto.ValorInventario = Producto.Costo * Producto.Existencia;
+    }
 
     public void Buscar()
     {
@@ -107,7 +112,7 @@
         if (guardado)
         {
             Nuevo();
-            toast.ShowSuccess("Producto guardado correctamente");
+            toast.ShowSuccess("Productos guardado correctamente");
         }
         else
             toast.ShowError("No se puedo guardar el producto");
