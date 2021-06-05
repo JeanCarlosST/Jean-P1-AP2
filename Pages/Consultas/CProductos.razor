@@ -1,0 +1,128 @@
+﻿@page "/cproductos"
+
+<div class="row justify-content-center">
+
+    <div class="col">
+
+        <div class="card">
+
+            <div class="card-header">
+                <h3>Consulta de productos</h3>
+            </div>
+
+            <div class="card-body">
+                <form>
+                    <div class="input-group d-flex align-items-end">
+                        <select class="form-control col-2" @bind="Filtro">
+                            <option value="0">Filtro</option>
+                            <option value="1">Descripción</option>
+                            <option value="2">Existencia</option>
+                            <option value="3">Costo</option>
+                        </select>
+
+                        <div class="flex-fill mx-2">
+                            <label>Criterio</label>
+                            <input type="text" class="form-control" @bind="Criterio" />
+                        </div>
+
+                        <button class="btn btn-warning" type="button" @onclick="Buscar">
+                            <i class="oi oi-magnifying-glass mr-2" /> Buscar
+                        </button>
+                    </div>
+
+                    <table class="table my-2">
+                        <thead>
+                            <tr>
+                                <th>ProductoId</th>
+                                <th>Descripción</th>
+                                <th>Existencia</th>
+                                <th>Costo</th>
+                                <th>Valor de inventario</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Productos)
+                            {
+                                <tr>
+                                    <td>@item.ProductoId</td>
+                                    <td>@item.Descripcion</td>
+                                    <td>@item.Existencia</td>
+                                    <td>@item.Costo</td>
+                                    <td>@item.ValorInventario</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+
+            <div class="card-footer">
+                <div class="float-right">
+                    <label>Valor inventario</label>
+                    <input type="number" class="form-control" @bind="TotalValorInventario" readonly/>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+@code {
+
+    public string Filtro { get; set; }
+    public string Criterio { get; set; }
+    public List<Productos> Productos { get; set; }
+    public float TotalValorInventario { get; set; }
+
+    protected override void OnInitialized()
+    {
+        Nuevo();
+    }
+
+    private void Nuevo()
+    {
+        Productos = new List<Productos>();
+        Filtro = "0";
+        Criterio = string.Empty;
+        TotalValorInventario = 0;
+    }
+
+    public void Buscar()
+    {
+        Productos = new List<Productos>();
+        TotalValorInventario = 0;
+
+        if (Criterio.Length > 0)
+        {
+            switch(Filtro)
+            {
+                case "0":
+                    Productos = ProductosBLL.ObtenerLista(p => true);
+                    break;
+
+                case "1":
+                    Productos = ProductosBLL.ObtenerLista(p =>
+                        p.Descripcion.ToLower().Contains(Criterio.ToLower()));
+                    break;
+
+                case "2":
+                    Productos = ProductosBLL.ObtenerLista(p =>
+                        p.Existencia > float.Parse(Criterio));
+                    break;
+
+                case "3":
+                    Productos = ProductosBLL.ObtenerLista(p =>
+                        p.Costo > float.Parse(Criterio));
+                    break;
+            }
+        }
+        else
+        {
+            Productos = ProductosBLL.ObtenerLista(p => true);
+        }
+
+        foreach (var item in Productos)
+            TotalValorInventario += item.ValorInventario;
+    }
+}
